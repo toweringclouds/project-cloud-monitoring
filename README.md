@@ -9,7 +9,7 @@ It is recommended for startup or small-sized company.
 
 ### Main Features
 
-- [2023. 03. ??] server push on periodical health check result via websocket (v0.2.0)
+- [2023. 03. 24] server push on periodical health check result via websocket (v0.2.0)
 - [2023. 03. 17] port alive check on remote server or application by polling (v0.1.0)
 
 ### Running the server
@@ -27,7 +27,7 @@ npm start (every changed)
 ```
 
 2. web ui service (frontend-vue2)
-   - visit auth0 cloud (auth0.com) and register new auth0 account
+   - visit auth0 cloud (auth0.com) and register your custom domain
    - add custom application and issue client credentials
    - update auth.json in src/services folder
    - run following commands with reference to scripts in package.json
