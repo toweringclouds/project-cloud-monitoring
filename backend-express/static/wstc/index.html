@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Web Socket Test Client</title>
+    <link rel="stylesheet" href="/wstc/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>websocket test app</h2>
+      <h4>
+        # websocket server :
+        <select id="endpoint" name="endpoint">
+          <option value="127.0.0.1:50911">LOC</option>
+          <option value="?.?.?.?:59911">OPS</option>
+        </select>
+      </h4>
+      <form class="form-inline">
+        <span class="form-group">
+          <label for="msgForm">Message: </label>
+          <input type="text" class="form-control" id="msgForm" />
+        </span>
+        <button type="submit" class="btn btn-primary" id="chat">
+          Send Message to Server
+        </button>
+      </form>
+      <hr />
+      <div id="chatLogs"></div>
+    </div>
+    <script src="/wstc/js/jquery.min.js"></script>
+    <script src="/wstc/js/socket.io.min.js"></script>
+    <script>
+      $(function () {
+        const $endpoint = document.querySelector("#endpoint");
+        if (document.URL.indexOf("59911") != -1) {
+          $endpoint.options[1].selected = true;
+        } else {
+          $endpoint.options[0].selected = true;
+        }
+
+        const namespace = "abc";
+        const rooms = ["room0", "room1", "room2", "room3"];
+
+        console.log(`ws://${$endpoint.value}/${namespace}`);
+        const socket = io(`ws://${$endpoint.value}/${namespace}`);
+        console.log(socket.id);
+        const clientId = socket.id;
+
+        const makeRandomName = () => {
+          const possible = "abcdefghijklmnopqrstuvwxyz";
+          let name = "";
+
+          for (var i = 0; i < 5; i++) {
+            name += possible.charAt(
+              Math.floor(Math.random() * possible.length)
+            );
+          }
+          return name;
+        };
+
+        const randNm = makeRandomName();
+        socket.emit(rooms[0], {
+          div: "login",
+          name: randNm,
+          userid: `${randNm}@gmail.com`,
+        });
+
+        $("form").submit((e) => {
+          e.preventDefault();
+          let $msgForm = $("#msgForm");
+
+          socket.emit(rooms[0], {
+            div: "chat",
+            msg: $msgForm.val() == "" ? "hello" : $msgForm.val(),
+          });
+          $msgForm.val("");
+        });
+
+        socket.on(rooms[1], (data) => {
+          const msgBody = typeof data == "object" ? JSON.stringify(data) : data;
+          $("#chatLogs").append(
+            "<div><strong>[server]</strong> " + msgBody + "</div>"
+          );
+        });
+
+        socket.on(rooms[2], (data) => {
+          const msg = JSON.parse(data);
+          const msgBody =
+            typeof msg.what == "object" ? JSON.stringify(msg.what) : msg.what;
+          $("#chatLogs").append(
+            "<div><strong>[" + msg.who + "]</strong> " + msgBody + "</div>"
+          );
+        });
+
+        socket.on(rooms[3], (data) => {
+          const msg = JSON.parse(data);
+          const msgBody =
+            typeof msg.what == "object" ? JSON.stringify(msg.what) : msg.what;
+          $("#chatLogs").append(
+            "<div><strong>[" + msg.who + "]</strong> " + msgBody + "</div>"
+          );
+        });
+      });
+    </script>
+  </body>
+</html>

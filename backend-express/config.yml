@@ -1,0 +1,28 @@
+COMMON: &common
+  DEBUG: false
+  TESTING: false
+  PUSH: false
+  BATCH: false
+  REDIS_AUTH: "..."
+  REDIS_POOL: true
+  REDIS_TIMEOUT: 10
+  JWT_SECRET: "..."
+  LOCATION: "I"
+
+LOC: &loc
+  <<: *common
+  DEBUG: false
+  TESTING: true
+  CLIENT: "abc/loc"
+  REDIS_HOST: "?.?.?.?"
+  REDIS_PORT: 47379
+  LOCAL_HOST: "0.0.0.0"
+  LOCAL_PORT: 50990
+
+OPS: &ops
+  <<: *common
+  CLIENT: "abc/ops"
+  REDIS_HOST: "?.?.?.?"
+  REDIS_PORT: 39379
+  LOCAL_HOST: "0.0.0.0"
+  LOCAL_PORT: 59990

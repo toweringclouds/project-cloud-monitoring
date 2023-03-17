@@ -1,0 +1,27 @@
+{
+  "name": "port-alive-test",
+  "version": "1.0.0",
+  "description": "port alive test on remote host or service",
+  "author": "toweringcloud",
+  "license": "MIT",
+  "main": "test.js",
+  "keywords": [
+    "port",
+    "alive",
+    "test",
+    "health",
+    "check"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "npm install --silent",
+    "start": "node test.js"
+  },
+  "dependencies": {
+    "is-port-reachable": "^3.0.0",
+    "moment": "^2.28.0"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  title: "monitoring api"
+  description: "rest api service based on express cjs"
+  version: 1.0.0
+servers:
+  - url: /v1
+paths:
+  /metrics:
+    get:
+      tags:
+        - metric
+      summary: "[R] search metric list or check current metric"
+      security: []
+      operationId: searchMetrics
+      x-swagger-router-controller: MetricController
+      parameters:
+        - in: query
+          name: metricType
+          schema:
+            type: string
+            enum: ["S", "A"]
+          description: "metric type : S (Server), A (Application)"
+          required: false
+      responses:
+        "200":
+          description: "Success (Exist or Empty)"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultList"
+                x-content-type: application/json
+        "400":
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Failure"
+        "500":
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Failure"
+
+components:
+  schemas:
+    AnyValue:
+      title: any schema
+      description: Can be any value, including `null`.
+      nullable: true
+      anyOf:
+        - type: object
+        - type: string
+        - type: integer
+        - type: boolean
+        - type: array
+          items:
+            type: object
+
+    Default:
+      title: default schema
+      type: object
+      properties:
+        result:
+          type: boolean
+        data:
+          type: object
+      example:
+        result: true
+        data: {}
+
+    DefaultList:
+      title: "default list schema"
+      type: object
+      properties:
+        result:
+          type: boolean
+        data:
+          type: array
+          items:
+            type: object
+      example:
+        result: true
+        data: []
+
+    Failure:
+      title: "error schema"
+      type: object
+      properties:
+        result:
+          type: boolean
+        data:
+          type: object
+      example:
+        result: false
+        data: "error message"
+
+    Metric:
+      title: metric schema
+      type: object
+      required:
+        - metricId
+        - metricType
+      properties:
+        metricId:
+          type: string
+          description: "metric id"
+        metricType:
+          type: string
+          enum: [S, A]
+          description: "metric type : S (Server), A (Application)"
+        metricData:
+          type: object
+          description: "metric data"
+      example:
+        metricId: "metric1"
+        metricType: "S"
+        metricData: {}
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer

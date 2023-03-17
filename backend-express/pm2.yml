@@ -1,0 +1,7 @@
+apps:
+  - name: "monitoring-api"
+    script: "./main.js"
+    exec_mode: "cluster"
+    instances: 4
+    env:
+      NODE_ENV: "{RENV}"
